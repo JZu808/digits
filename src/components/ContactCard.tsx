@@ -1,11 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { Card, Image } from 'react-bootstrap';
-import { Contact } from '@/lib/validationSchemas';
+import { Card, Image, ListGroup } from 'react-bootstrap';
+import { Contact, Note } from '@prisma/client';
+import NoteItem from '@/components/NoteItem';
+import AddNoteForm from '@/components/AddNoteForm';
 
-/* Renders a single contact card. See list/page.tsx. */
-const ContactCard = ({ contact }: { contact: Contact & { id: number } }) => (
+/* Renders a single contact card with its notes. See list/page.tsx. */
+const ContactCard = ({ contact, notes }: { contact: Contact; notes: Note[] }) => (
   <Card className="h-100">
     <Card.Header>
       <Image src={contact.image} width={75} alt={`${contact.firstName} ${contact.lastName}`} />
@@ -18,6 +20,12 @@ const ContactCard = ({ contact }: { contact: Contact & { id: number } }) => (
     </Card.Header>
     <Card.Body>
       <Card.Text>{contact.description}</Card.Text>
+      <ListGroup variant="flush">
+        {notes.map((note) => (
+          <NoteItem key={note.id} note={note} />
+        ))}
+      </ListGroup>
+      <AddNoteForm contactId={contact.id} />
     </Card.Body>
     <Card.Footer>
       <Link href={`/edit/${contact.id}`}>Edit</Link>

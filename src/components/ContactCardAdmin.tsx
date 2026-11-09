@@ -1,10 +1,11 @@
 'use client';
 
-import { Card, Image } from 'react-bootstrap';
-import { Contact } from '@/lib/validationSchemas';
+import { Card, Image, ListGroup } from 'react-bootstrap';
+import { Contact, Note } from '@prisma/client';
+import NoteItem from '@/components/NoteItem';
 
-/* Renders a single contact card for the admin page, including the owner. */
-const ContactCardAdmin = ({ contact }: { contact: Contact & { owner: string } }) => (
+/* Renders a single contact card for the admin page, including the owner and notes. */
+const ContactCardAdmin = ({ contact, notes }: { contact: Contact; notes: Note[] }) => (
   <Card className="h-100">
     <Card.Header>
       <Image src={contact.image} width={75} alt={`${contact.firstName} ${contact.lastName}`} />
@@ -17,6 +18,11 @@ const ContactCardAdmin = ({ contact }: { contact: Contact & { owner: string } })
     </Card.Header>
     <Card.Body>
       <Card.Text>{contact.description}</Card.Text>
+      <ListGroup variant="flush">
+        {notes.map((note) => (
+          <NoteItem key={note.id} note={note} />
+        ))}
+      </ListGroup>
       <p className="blockquote-footer">{contact.owner}</p>
     </Card.Body>
   </Card>
